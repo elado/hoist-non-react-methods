@@ -1,4 +1,4 @@
-# hoist-non-react-methods [![version][npm-version]][npm-url] [![License][npm-license]][license-url]
+# hoist-non-react-methods
 
 > Copies non-react specific methods from a child component to a parent component
 
