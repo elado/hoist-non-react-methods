@@ -1,6 +1,6 @@
 {
   "name": "hoist-non-react-methods",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Copies non-react specific methods from a child component to a parent component",
   "main": "lib/index.js",
   "repository": {
@@ -42,8 +42,8 @@
     "jsdom": "^7.2.2",
     "mocha": "^2.0.1",
     "parallelshell": "^2.0.0",
-    "react": "^0.14.6",
-    "react-addons-test-utils": "^0.14.6",
+    "react": "^0.14.0",
+    "react-addons-test-utils": "^0.14.0",
     "rimraf": "^2.5.1",
     "watch": "^0.17.1"
   },
