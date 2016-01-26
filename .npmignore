@@ -1,0 +1,6 @@
+/src
+/test
+/.babelrc
+/lib/**/*.js.map
+/.travis.yml
+/coverage

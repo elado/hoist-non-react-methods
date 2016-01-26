@@ -1,0 +1,55 @@
+{
+  "name": "hoist-non-react-methods",
+  "version": "1.0.0",
+  "description": "Copies non-react specific methods from a child component to a parent component",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/elado/hoist-non-react-methods.git"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec --compilers js:babel/register --recursive",
+    "build:clean": "rimraf lib coverage",
+    "build:js": "babel -s -d lib/ src/",
+    "build": "npm run build:clean && npm run build:js",
+    "watch:js": "watch 'npm run build:js' src/",
+    "watch": "npm run build:clean && parallelshell 'npm run watch:js'",
+    "watch:build": "npm run build:clean && npm run watch",
+    "watch:test": "npm test -- -w",
+    "prepublish": "npm run build",
+    "test:cov": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive",
+    "lint": "eslint src test"
+  },
+  "author": "Elad Ossadon <elad@ossadon.com> (http://github.com/elado)",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
+    "babel-eslint": "^5.0.0-beta6",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-es2015-loose": "^7.0.0",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "chai": "^3.0.0",
+    "codeclimate-test-reporter": "^0.3.0",
+    "eslint": "^1.10.3",
+    "eslint-plugin-react": "^3.16.1",
+    "isparta": "^4.0.0",
+    "istanbul": "^0.4.2",
+    "jsdom": "^7.2.2",
+    "mocha": "^2.0.1",
+    "parallelshell": "^2.0.0",
+    "react": "<0.15.0",
+    "react-addons-test-utils": "^0.14.6",
+    "rimraf": "^2.5.1",
+    "watch": "^0.17.1"
+  },
+  "keywords": [
+    "react"
+  ],
+  "dependencies": {
+    "invariant": "^2.2.0"
+  }
+}
