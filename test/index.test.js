@@ -139,7 +139,7 @@ describe('hoist-non-react-methods', function () {
       function decorator() {
         return function (WrappedComponent) {
           class Wrapper extends Component {
-            static displayName = `Wrapper(${WrappedComponent.displayName})`
+            static displayName = `Wrapper(${WrappedComponent.displayName})`;
 
             render() {
               return <WrappedComponent ref="wrappedComponent" />
@@ -152,7 +152,7 @@ describe('hoist-non-react-methods', function () {
 
       @decorator()
       class Child extends Component {
-        static displayName = 'Child'
+        static displayName = 'Child';
 
         render() {
           return null
