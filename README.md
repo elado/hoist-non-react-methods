@@ -31,10 +31,12 @@ class Composer extends React.Component {
 
 class Root extends React.Component {
   render() {
-    <div>
-      <button onClick={e => this.refs.composer.focus()}></button>
-      <Composer ref="composer" />
-    </div>
+    return (
+      <div>
+        <button onClick={e => this.refs.composer.focus()}></button>
+        <Composer ref="composer" />
+      </div>
+    )
   }
 }
 ```
@@ -74,10 +76,12 @@ function someDecorator() {
 class Root extends React.Component {
   // this.refs.composer.focus is undefined!
   render() {
-    <div>
-      <button onClick={e => this.refs.composer.focus()}></button>
-      <Composer ref="composer" />
-    </div>
+    return (
+      <div>
+        <button onClick={e => this.refs.composer.focus()}></button>
+        <Composer ref="composer" />
+      </div>
+    )
   }
 }
 ```
@@ -125,10 +129,12 @@ function someDecorator() {
 class Root extends React.Component {
   // works!
   render() {
-    <div>
-      <button onClick={e => this.refs.composer.focus()}></button>
-      <Composer ref="composer" />
-    </div>
+    return (
+      <div>
+        <button onClick={e => this.refs.composer.focus()}></button>
+        <Composer ref="composer" />
+      </div>
+    )
   }
 }
 ```
