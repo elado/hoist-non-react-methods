@@ -1,5 +1,3 @@
-import invariant from 'invariant'
-
 const REACT_PROTOTYPE = {
   autobind: true,
   childContextTypes: true,
@@ -26,7 +24,7 @@ const REACT_PROTOTYPE = {
   setState: true,
   shouldComponentUpdate: true,
   statics: true,
-  updateComponent: true
+  updateComponent: true,
 }
 
 const REACT_STATICS = {
@@ -37,7 +35,7 @@ const REACT_STATICS = {
   getDefaultProps: true,
   mixins: true,
   propTypes: true,
-  type: true
+  type: true,
 }
 
 const KNOWN_STATICS = {
@@ -46,27 +44,40 @@ const KNOWN_STATICS = {
   prototype: true,
   caller: true,
   arguments: true,
-  arity: true
+  arity: true,
 }
 
-export default function hoistNonReactMethods(targetComponent, sourceComponent, delegateTo=(w => w.refs.child)) {
+const defaultConfig = {
+  delegateTo: w => w.refs.child,
+  hoistStatics: true,
+}
+
+export default function hoistNonReactMethods(targetComponent, sourceComponent, config) {
   const targetComponentName = targetComponent.displayName || targetComponent.name || 'Wrapper'
   const sourceComponentName = sourceComponent.displayName || sourceComponent.name || 'WrappedComponent'
+  const hoistStatics = config && typeof config.hoistStatics !== 'undefined' ? config.hoistStatics : defaultConfig.hoistStatics
+  let delegateTo = config && typeof config.delegateTo !== 'undefined' ? config.delegateTo : defaultConfig.delegateTo
+  // backwards compatible where config option is delegateTo function
+  if (typeof config === 'function') delegateTo = config
 
-  const statics = Object.getOwnPropertyNames(sourceComponent)
-    .filter(k => !REACT_STATICS[k] && !KNOWN_STATICS[k])
+  if (hoistStatics) {
+    const statics = Object.getOwnPropertyNames(sourceComponent)
+      .filter(k => !REACT_STATICS[k] && !KNOWN_STATICS[k])
 
-  statics.forEach(methodName => {
-    invariant(!targetComponent[methodName], `Static method ${methodName} already exists in wrapper component ${targetComponentName}, and won't be hoisted. Consider changing the name on ${sourceComponentName}.`)
-    targetComponent[methodName] = sourceComponent[methodName]
-  })
+    statics.forEach(methodName => {
+      if(targetComponent[methodName]) console.warn(`Static method ${methodName} already exists in wrapper component ${targetComponentName}, and won't be hoisted. Consider changing the name on ${sourceComponentName}.`)
+      targetComponent[methodName] = sourceComponent[methodName]
+    })
+  }
 
   const methods = Object.getOwnPropertyNames(sourceComponent.prototype)
     .filter(k => !REACT_PROTOTYPE[k])
 
   methods.forEach(methodName => {
-    invariant(!targetComponent.prototype[methodName], `Method ${methodName} already exists in wrapper component ${targetComponentName}, and won't be hoisted. Consider changing the name on ${sourceComponentName}.`)
-    if (targetComponent.prototype[methodName]) return
+    if (targetComponent.prototype[methodName]) {
+      console.warn(`Method ${methodName} already exists in wrapper component ${targetComponentName}, and won't be hoisted. Consider changing the name on ${sourceComponentName}.`)
+      return
+    }
 
     targetComponent.prototype[methodName] = function (...args) {
       return sourceComponent.prototype[methodName].call(delegateTo.call(this, this), ...args)

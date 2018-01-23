@@ -122,7 +122,9 @@ function someDecorator() {
       }
     }
 
-    return hoistNonReactMethods(Wrapper, WrappedComponent, c => c.refs.wrappedComponent)
+    return hoistNonReactMethods(Wrapper, WrappedComponent, {
+      delegateTo: c => c.refs.wrappedComponent
+    })
   }
 }
 
@@ -145,11 +147,17 @@ class Root extends React.Component {
 hoistNonReactMethods(
   Wrapper: ReactComponent,
   WrappedComponent: ReactComponent,
-  delegateTo: function(ReactComponent wrapperComponentInstance):ReactComponent childComponentInstance
+  {
+    delegateTo: function(ReactComponent wrapperComponentInstance):ReactComponent childComponentInstance,
+    hoistStatics: boolean,
+  }
 )
 ```
 
-The third parameter is a function that gets the instance of the wrapper component and returns the instance of the wrapped component (e.g. `(wrapper) => wrapper.refs.child`)
+The third parameter is a configuration object. Options:
+
+- `delegateTo`: a function that gets the instance of the wrapper component and returns the instance of the wrapped component (e.g. `wrapper => wrapper.refs.child`)
+- `hoistStatics: true/false` - controls whether to hoist statics or not
 
 ## Test
 

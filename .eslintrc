@@ -12,7 +12,7 @@
   "parser": "babel-eslint",
   "rules": {
     "array-bracket-spacing": [ 2, "always" ],
-    "comma-dangle": [ 2, "never" ],
+    "comma-dangle": 0,
     "eol-last": 2,
     "indent": [ 2, 2, { "SwitchCase": 1 } ],
     "jsx-quotes": [ 2, "prefer-double" ],
@@ -28,7 +28,8 @@
     "valid-jsdoc": 2,
     "react/jsx-uses-react": 1,
     "react/jsx-no-undef": 2,
-    "react/wrap-multilines": 2
+    "react/wrap-multilines": 2,
+    "no-console": 0
   },
   "plugins": [
     "react"

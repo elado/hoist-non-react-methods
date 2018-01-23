@@ -1,6 +1,7 @@
 /*globals describe,it,beforeEach,context */
 
-import { expect } from 'chai'
+import { expect, assert } from 'chai'
+import sinon from 'sinon'
 import React, { Component } from 'react'
 import ReactAddonsTestUtils from 'react-addons-test-utils'
 import jsdom from 'jsdom'
@@ -13,6 +14,7 @@ global.navigator = { userAgent: 'node.js' }
 describe('hoist-non-react-methods', function () {
   let Child, Wrapper
   let wrapper, wrappedChild
+  let initWrapper
 
   context('hoisted methods', function () {
     beforeEach(function () {
@@ -52,27 +54,37 @@ describe('hoist-non-react-methods', function () {
         }
       }
 
-      hoistNonReactMethods(Wrapper, Child)
-
-      wrapper = ReactAddonsTestUtils.renderIntoDocument(<Wrapper />)
-      wrappedChild = wrapper.refs.child
+      initWrapper = (options={}) => {
+        hoistNonReactMethods(Wrapper, Child, options)
+        wrapper = ReactAddonsTestUtils.renderIntoDocument(<Wrapper />),
+        wrappedChild = wrapper.refs.child
+      }
     })
 
     it('hoists non react prototype methods from child to wrapper', function () {
+      initWrapper()
       expect(wrapper.methodThatExistsInChildAndIsCalledWithItsConext).to.exist
       expect(wrapper.methodThatExistsInChild()).to.eq('methodThatExistsInChild')
     })
 
     it('hoists non react static methods from child to wrapper', function () {
+      initWrapper()
       expect(Wrapper.staticMethodInChild()).to.eq('staticMethodInChild')
     })
 
+    it('doesn\'t hoists static methods when hoistStatics === false', function () {
+      initWrapper({ hoistStatics: false })
+      expect(Wrapper.staticMethodInChild).to.be.undefined
+    })
+
     it('keeps react methods on wrapper and child', function () {
+      initWrapper()
       expect(wrapper.mountedWrapper).to.be.true
       expect(wrappedChild.mountedChild).to.be.true
     })
 
     it('delegates hoisted methods in wrapper to child', function () {
+      initWrapper()
       expect(wrapper.methodThatExistsInChildAndIsCalledWithItsConext()).to.eq('Called Child')
     })
   })
@@ -99,9 +111,14 @@ describe('hoist-non-react-methods', function () {
         }
       }
 
-      expect(() => {
-        hoistNonReactMethods(Wrapper, Child)
-      }).to.throw(/Method methodThatExistsInBoth already exists/i)
+      const consoleSpy = sinon.spy(console, 'warn')
+
+      hoistNonReactMethods(Wrapper, Child)
+
+      assert(consoleSpy.calledOnce, 'Warning not issued')
+      assert(consoleSpy.calledWith("Method methodThatExistsInBoth already exists in wrapper component Wrapper, and won't be hoisted. Consider changing the name on Child."), 'Wrong warning message')
+
+      consoleSpy.restore()
     })
 
     it('shows a warning when a method on the child already exists on the wrapper', function () {
@@ -125,9 +142,14 @@ describe('hoist-non-react-methods', function () {
         }
       }
 
-      expect(() => {
-        hoistNonReactMethods(Wrapper, Child)
-      }).to.throw(/Method staticMethodThatExistsInBoth already exists/i)
+      const consoleSpy = sinon.spy(console, 'warn')
+
+      hoistNonReactMethods(Wrapper, Child)
+
+      assert(consoleSpy.calledOnce, 'Warning not issued')
+      assert(consoleSpy.calledWith('Static method staticMethodThatExistsInBoth already exists in wrapper component Wrapper, and won\'t be hoisted. Consider changing the name on Child.'), 'Wrong warning message')
+
+      consoleSpy.restore()
     })
   })
 
@@ -139,7 +161,7 @@ describe('hoist-non-react-methods', function () {
       function decorator() {
         return function (WrappedComponent) {
           class Wrapper extends Component {
-            static displayName = `Wrapper(${WrappedComponent.displayName})`;
+            static displayName = `Wrapper(${WrappedComponent.displayName})`
 
             render() {
               return <WrappedComponent ref="wrappedComponent" />
@@ -152,7 +174,7 @@ describe('hoist-non-react-methods', function () {
 
       @decorator()
       class Child extends Component {
-        static displayName = 'Child';
+        static displayName = 'Child'
 
         render() {
           return null
