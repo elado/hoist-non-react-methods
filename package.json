@@ -51,6 +51,6 @@
     "react"
   ],
   "dependencies": {
-    "invariant": "^2.2.0"
+    "sinon": "^4.2.0"
   }
 }
