@@ -1,5 +1,7 @@
 # hoist-non-react-methods
 
+### I recommend using https://github.com/elado/react-ref-method-forwarder or React 16.3+ `React.forwardRef` instead
+
 > Copies non-react specific methods from a child component to a parent component
 
 [![build status](https://img.shields.io/travis/elado/hoist-non-react-methods/master.svg?style=flat-square)](https://travis-ci.org/elado/hoist-non-react-methods) [![npm version](https://img.shields.io/npm/v/hoist-non-react-methods.svg?style=flat-square)](https://www.npmjs.com/package/hoist-non-react-methods) [![codeclimate](https://img.shields.io/codeclimate/github/elado/hoist-non-react-methods.svg?style=flat-square)](https://codeclimate.com/github/elado/hoist-non-react-methods)
